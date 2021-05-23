@@ -18,9 +18,15 @@ if isWifiQR == 'y'.lower():
 														#source: https://github.com/zxing/zxing/wiki/Barcode-Contents#wi-fi-network-config-android-ios-11
 else:	
 	data = input('Enter the data to scan: ')
-qrcode_size = int(input('Enter size of QRcode (1-10): '))
-qrcode_name = input(f'\nWARNING! If you name file as existing one, it will rewrite that file with new data.\n\nEnter name of qrcode file (you may not fill this field. Default name will be applied): ')
+try:
+	qrcode_size = int(input('Enter size of QRcode (1-10): '))
+except ValueError:
+	qrcode_size = 7
+	print('You just triggered ValueError. Size was set to default: 7')
 
+qrcode_name = input(f'\nWARNING! If you name file as existing one, it will rewrite that file with new data.\n\nEnter name of qrcode file (you may not fill this field. Default name will be applied): ')
+if qrcode_name == '':
+	qrcode_name = 'qrcode'
 
 if qrcode_size < 0:
 	qrcode_size = 1
@@ -32,7 +38,7 @@ qrcode = pyqrcode.create(data) # Generate QR code
 if file_type == 'png':
 	qrcode.png(f"{qrcode_name}.png", scale = qrcode_size) # "myqr.png"
 	qrcode.show()
-if file_type == 'svg':
+elif file_type == 'svg':
 	qrcode.svg(f"{qrcode_name}.svg", scale = qrcode_size)
 else: #in case incorrect file type, .png will be set
 	qrcode.png(f"{qrcode_name}.png", scale = qrcode_size) # "myqr.png"
